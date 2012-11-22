@@ -11,8 +11,15 @@ from django.utils.encoding import force_unicode
 LEVEL_TAGS = utils.get_level_tags()
 
 class Message(models.Model):
-    user = models.ForeignKey(User, blank=True, null=True)
-    from_user = models.ForeignKey(User, blank=True, null=True, related_name="from_user")
+
+    if settings.AUTH_USER_MODEL:
+        user = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True)
+    else:
+        user = models.ForeignKey(User, blank=True, null=True)
+    if settings.AUTH_USER_MODEL:
+        from_user = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, related_name="from_user")
+    else:
+        from_user = models.ForeignKey(User, blank=True, null=True, related_name="from_user")
     subject = models.CharField(max_length=255, blank=True, default='')
     message = models.TextField()
     LEVEL_CHOICES = (
